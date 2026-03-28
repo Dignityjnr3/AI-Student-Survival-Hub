@@ -7,8 +7,8 @@ import {
   Brain, Camera, FileText, Users, ArrowRight, User, Shield 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
 import { clsx } from 'clsx';
+import { safeFormat } from '../lib/dateUtils';
 
 interface DashboardProps {
   user: UserProfile;
@@ -354,7 +354,7 @@ export default function Dashboard({ user }: DashboardProps) {
                     </div>
                     <div>
                       <p className="font-bold text-sm">{assignment.title}</p>
-                      <p className="text-xs text-neutral-400">Due {assignment.deadline ? format(new Date(assignment.deadline), 'MMM d') : 'N/A'}</p>
+                      <p className="text-xs text-neutral-400">Due {safeFormat(assignment.deadline, 'MMM d')}</p>
                     </div>
                   </div>
                 ))
@@ -366,7 +366,7 @@ export default function Dashboard({ user }: DashboardProps) {
                     </div>
                     <div>
                       <p className="font-bold text-sm">{course.title}</p>
-                      <p className="text-xs text-neutral-400">Created {course.createdAt ? format(new Date(course.createdAt), 'MMM d') : 'N/A'}</p>
+                      <p className="text-xs text-neutral-400">Created {safeFormat(course.createdAt, 'MMM d')}</p>
                     </div>
                   </div>
                 ))

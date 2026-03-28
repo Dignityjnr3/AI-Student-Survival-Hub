@@ -3,6 +3,7 @@ import { collection, query, getDocs, doc, updateDoc, deleteDoc, onSnapshot } fro
 import { db, handleFirestoreError, OperationType } from '../firebase';
 import { UserProfile, Course, Assignment } from '../types';
 import { Users, BookOpen, FileText, Shield, Trash2, UserCog, Search, Activity, Clock } from 'lucide-react';
+import { safeLocaleDate, toDate } from '../lib/dateUtils';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -63,9 +64,9 @@ export default function AdminDashboard() {
   );
 
   // Get recent activity
-  const recentUsers = [...users].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
-  const recentCourses = [...courses].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
-  const recentAssignments = [...assignments].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
+  const recentUsers = [...users].sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0)).slice(0, 5);
+  const recentCourses = [...courses].sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0)).slice(0, 5);
+  const recentAssignments = [...assignments].sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0)).slice(0, 5);
 
   if (loading) {
     return (
@@ -135,7 +136,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <span className="text-[10px] text-neutral-400">
-                      {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
+                      {safeLocaleDate(u.createdAt)}
                     </span>
                   </div>
                 ))}
@@ -153,7 +154,7 @@ export default function AdminDashboard() {
                       <p className="text-sm font-bold text-neutral-900 dark:text-white truncate max-w-[150px]">{c.title}</p>
                     </div>
                     <span className="text-[10px] text-neutral-400">
-                      {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'N/A'}
+                      {safeLocaleDate(c.createdAt)}
                     </span>
                   </div>
                 ))}
@@ -171,7 +172,7 @@ export default function AdminDashboard() {
                       <p className="text-sm font-bold text-neutral-900 dark:text-white truncate max-w-[150px]">{a.title}</p>
                     </div>
                     <span className="text-[10px] text-neutral-400">
-                      {a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'N/A'}
+                      {safeLocaleDate(a.createdAt)}
                     </span>
                   </div>
                 ))}

@@ -1,0 +1,13 @@
+/* Netlify Redirects for SPA */
+/* All routes should be handled by index.html */
+/* This prevents 404 errors on page refresh */
+/* and blank pages on direct navigation */
+
+/* Redirect all requests to index.html with a 200 status code */
+/* This allows React Router to handle the routing on the client side */
+/* The ! ensures it matches even if a file exists (though usually we want to serve files if they exist) */
+/* Actually, the standard Netlify SPA redirect is: */
+/* /*  /index.html  200 */
+
+/* Standard SPA redirect */
+/*  /index.html  200

@@ -4,8 +4,8 @@ import { db, handleFirestoreError, OperationType } from '../firebase';
 import { UserProfile, Assignment, Submission } from '../types';
 import { FileText, Clock, CheckCircle, ChevronRight, Calendar, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
 import { motion } from 'motion/react';
+import { safeFormat, toDate } from '../lib/dateUtils';
 
 interface AssignmentsProps {
   user: UserProfile;
@@ -51,7 +51,8 @@ export default function Assignments({ user }: AssignmentsProps) {
     if (submission) return 'submitted';
     
     const assignment = assignments.find(a => a.id === assignmentId);
-    if (assignment && new Date(assignment.deadline) < new Date()) return 'overdue';
+    const deadline = toDate(assignment?.deadline);
+    if (deadline && deadline < new Date()) return 'overdue';
     
     return 'pending';
   };
@@ -113,7 +114,7 @@ export default function Assignments({ user }: AssignmentsProps) {
                       <div className="flex items-center gap-3 mt-1 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          Due {assignment.deadline ? format(new Date(assignment.deadline), 'MMM d, h:mm a') : 'N/A'}
+                          Due {safeFormat(assignment.deadline, 'MMM d, h:mm a')}
                         </span>
                         {user.role === 'student' && (
                           <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${
