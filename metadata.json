@@ -1,0 +1,9 @@
+{
+  "name": "AI Student Survival Hub",
+  "description": "A comprehensive platform for students and lecturers to manage academic tasks with AI assistance, simplifying assignments and tracking progress.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
