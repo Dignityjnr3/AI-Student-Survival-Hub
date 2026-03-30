@@ -139,13 +139,15 @@ export default function LecturerAttendance({ user }: LecturerAttendanceProps) {
                 </thead>
                 <tbody className="divide-y divide-neutral-50 dark:divide-neutral-800">
                   {Array.from(new Set(attendance.map(a => a.studentId))).map(studentId => {
-                    const studentName = attendance.find(a => a.studentId === studentId)?.studentName || 'Unknown';
+                    const record = attendance.find(a => a.studentId === studentId);
+                    const studentName = record?.studentName || 'Unknown';
+                    const regNumber = record?.studentRegNumber || 'N/A';
                     const studentAttendance = attendance.filter(a => a.studentId === studentId);
                     
                     return (
                       <tr key={studentId} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
                         <td className="py-4 px-4 font-medium text-neutral-900 dark:text-white sticky left-0 bg-white dark:bg-neutral-900 z-10 border-r border-neutral-50 dark:border-neutral-800 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">
-                          {studentName}
+                          {studentName} ({regNumber})
                         </td>
                         {daysInMonth.map(day => {
                           const isPresent = studentAttendance.some(a => a.date === format(day, 'yyyy-MM-dd'));

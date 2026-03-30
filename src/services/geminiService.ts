@@ -10,7 +10,8 @@ export async function generateStudyPlan(assignmentTitle: string, description: st
   Description: ${description}
   Deadline: ${deadline}
   
-  Break the assignment into manageable steps, estimate the time required for each step, and provide a clear plan.`;
+  Break the assignment into manageable steps, estimate the time required for each step, and provide a clear plan. 
+  For each step, also provide 2-3 learning resources (URLs or titles of books/articles) that the student can use to learn the necessary skills or information for that step.`;
 
   const response = await ai.models.generateContent({
     model,
@@ -26,9 +27,14 @@ export async function generateStudyPlan(assignmentTitle: string, description: st
               type: Type.OBJECT,
               properties: {
                 task: { type: Type.STRING },
-                time: { type: Type.STRING }
+                time: { type: Type.STRING },
+                resources: { 
+                  type: Type.ARRAY, 
+                  items: { type: Type.STRING },
+                  description: "List of learning resources for this step"
+                }
               },
-              required: ["task", "time"]
+              required: ["task", "time", "resources"]
             }
           }
         },

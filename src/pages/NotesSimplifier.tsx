@@ -41,7 +41,7 @@ export default function NotesSimplifierPage() {
           <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm">
             <label className="block text-sm font-bold text-neutral-900 mb-2">Your Notes</label>
             <textarea
-              className="w-full h-96 p-4 rounded-xl border border-neutral-300 focus:ring-2 focus:ring-indigo-500 outline-none resize-none text-neutral-700 leading-relaxed"
+              className="w-full h-96 p-4 rounded-xl border border-neutral-300 focus:ring-2 focus:ring-indigo-500 outline-none resize-none text-black leading-relaxed"
               placeholder="Paste your notes here..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

@@ -26,6 +26,7 @@ export default function Dashboard({ user }: DashboardProps) {
 
   // Form states
   const [newCourseTitle, setNewCourseTitle] = useState('');
+  const [newCourseCode, setNewCourseCode] = useState('');
   const [newCourseDesc, setNewCourseDesc] = useState('');
   const [newAssignmentTitle, setNewAssignmentTitle] = useState('');
   const [newAssignmentDesc, setNewAssignmentDesc] = useState('');
@@ -89,10 +90,16 @@ export default function Dashboard({ user }: DashboardProps) {
 
   const handleCreateCourse = async (e: FormEvent) => {
     e.preventDefault();
+    const courseCodeRegex = /^[A-Z0-9\s]+$/;
+    if (!courseCodeRegex.test(newCourseCode.toUpperCase())) {
+      alert('Course code must be alphanumeric and contain only capital letters and numbers.');
+      return;
+    }
     try {
       await addDoc(collection(db, 'courses'), {
         lecturerId: user.uid,
         title: newCourseTitle,
+        courseCode: newCourseCode.toUpperCase(),
         description: newCourseDesc,
         createdAt: new Date().toISOString()
       });
@@ -100,6 +107,7 @@ export default function Dashboard({ user }: DashboardProps) {
       handleFirestoreError(error, OperationType.CREATE, 'courses');
     }
     setNewCourseTitle('');
+    setNewCourseCode('');
     setNewCourseDesc('');
     setShowCreateCourse(false);
   };
@@ -107,8 +115,14 @@ export default function Dashboard({ user }: DashboardProps) {
   const handleCreateAssignment = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      const course = courses.find(c => c.id === selectedCourseId);
       await addDoc(collection(db, 'assignments'), {
         courseId: selectedCourseId,
+        lecturerId: user.uid,
+        lecturerName: user.name,
+        lecturerTitle: user.title || '',
+        courseCode: course?.courseCode || user.courseCode || '',
+        courseTitle: course?.title || '',
         title: newAssignmentTitle,
         description: newAssignmentDesc,
         deadline: newAssignmentDeadline,
@@ -222,7 +236,7 @@ export default function Dashboard({ user }: DashboardProps) {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {user.role === 'admin' && (
+          {user.email === 'austineemeka2003cares@gmail.com' && (
             <Link 
               to="/admin"
               className="hidden sm:flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-200 dark:shadow-none mr-2"
@@ -400,6 +414,17 @@ export default function Dashboard({ user }: DashboardProps) {
                   className="w-full px-4 py-3 border border-neutral-200 dark:border-neutral-800 rounded-xl bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
                   value={newCourseTitle}
                   onChange={(e) => setNewCourseTitle(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2 text-neutral-700 dark:text-neutral-300">Course Code</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. MTH 101"
+                  className="w-full px-4 py-3 border border-neutral-200 dark:border-neutral-800 rounded-xl bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all uppercase"
+                  value={newCourseCode}
+                  onChange={(e) => setNewCourseCode(e.target.value)}
                 />
               </div>
               <div>

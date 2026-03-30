@@ -5,6 +5,10 @@ export interface UserProfile {
   name: string;
   email: string;
   role: UserRole;
+  title?: string; // For lecturers: Mr, Mrs, Dr, Prof
+  courseTitle?: string; // For lecturers
+  courseCode?: string; // For lecturers
+  regNumber?: string; // For students
   createdAt: any;
 }
 
@@ -12,6 +16,7 @@ export interface Course {
   id: string;
   lecturerId: string;
   title: string;
+  courseCode: string;
   description: string;
   createdAt: any;
 }
@@ -19,6 +24,11 @@ export interface Course {
 export interface Assignment {
   id: string;
   courseId: string;
+  lecturerId: string;
+  lecturerName?: string;
+  lecturerTitle?: string;
+  courseCode?: string;
+  courseTitle?: string;
   title: string;
   description: string;
   deadline: string; // ISO string
@@ -46,6 +56,7 @@ export interface Attendance {
   id: string;
   studentId: string;
   studentName?: string;
+  studentRegNumber?: string;
   courseId: string;
   lecturerId: string;
   date: string; // YYYY-MM-DD
@@ -57,6 +68,7 @@ export interface StudyPlan {
   steps: {
     task: string;
     time: string;
+    resources?: string[]; // AI generated resources
   }[];
 }
 

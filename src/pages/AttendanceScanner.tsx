@@ -79,6 +79,7 @@ export default function AttendanceScanner({ user }: AttendanceScannerProps) {
       await addDoc(collection(db, 'attendance'), {
         studentId: user.uid,
         studentName: user.name,
+        studentRegNumber: user.regNumber || '',
         courseId: data.courseId,
         lecturerId: data.lecturerId,
         date: today,

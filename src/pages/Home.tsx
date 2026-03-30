@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Sparkles, BookOpen, UserCheck, FileText, ArrowRight, Shield, Zap, GraduationCap } from 'lucide-react';
+import Footer from '../components/Footer';
 
 export default function Home({ user, isDarkMode }: { user: any; isDarkMode: boolean }) {
   const navigate = useNavigate();
@@ -240,22 +241,7 @@ export default function Home({ user, isDarkMode }: { user: any; isDarkMode: bool
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center">
-            <GraduationCap className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mr-2" />
-            <span className="text-lg font-bold text-neutral-900 dark:text-white tracking-tight">Student Hub</span>
-          </div>
-          <p className="text-neutral-500 dark:text-neutral-400 text-sm">
-            © 2026 AI Student Survival Hub. All rights reserved.
-          </p>
-          <div className="flex space-x-6">
-            <a href="#" className="text-neutral-400 hover:text-indigo-600 transition-colors">Twitter</a>
-            <a href="#" className="text-neutral-400 hover:text-indigo-600 transition-colors">GitHub</a>
-            <a href="#" className="text-neutral-400 hover:text-indigo-600 transition-colors">LinkedIn</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

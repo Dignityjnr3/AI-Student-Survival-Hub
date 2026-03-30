@@ -120,7 +120,7 @@ export default function MockExamGenerator() {
                     </div>
                   ) : (
                     <textarea 
-                      className="w-full p-4 border border-neutral-200 rounded-xl h-32 focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="w-full p-4 border border-neutral-200 rounded-xl h-32 focus:ring-2 focus:ring-indigo-500 outline-none text-black"
                       placeholder="Type your answer here..."
                       value={answers[q.id] || ''}
                       onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
@@ -208,7 +208,7 @@ export default function MockExamGenerator() {
           <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm">
             <label className="block text-sm font-bold text-neutral-900 mb-2">Course Content / Notes</label>
             <textarea
-              className="w-full h-96 p-4 rounded-xl border border-neutral-300 focus:ring-2 focus:ring-indigo-500 outline-none resize-none text-neutral-700 leading-relaxed"
+              className="w-full h-96 p-4 rounded-xl border border-neutral-300 focus:ring-2 focus:ring-indigo-500 outline-none resize-none text-black leading-relaxed"
               placeholder="Paste the content you want to be tested on..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -226,9 +226,12 @@ export default function MockExamGenerator() {
                   type="number" 
                   min="1" 
                   max="180"
-                  className="w-full px-4 py-2 border border-neutral-200 rounded-lg"
-                  value={duration}
-                  onChange={(e) => setDuration(parseInt(e.target.value))}
+                  className="w-full px-4 py-2 border border-neutral-200 rounded-lg text-black"
+                  value={isNaN(duration) ? '' : String(duration)}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    setDuration(isNaN(val) ? 0 : val);
+                  }}
                 />
               </div>
               <button

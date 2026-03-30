@@ -5,7 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage, handleFirestoreError, OperationType } from '../firebase';
 import { UserProfile, Assignment, Submission, StudyPlan } from '../types';
 import { generateStudyPlan } from '../services/geminiService';
-import { Calendar, Clock, ArrowLeft, CheckCircle, Sparkles, Loader2, Upload, Send, FileText, X } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, CheckCircle, Sparkles, Loader2, Upload, Send, FileText, X, User } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface AssignmentDetailProps {
@@ -159,6 +159,12 @@ export default function AssignmentDetail({ user }: AssignmentDetailProps) {
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">{assignment.title}</h1>
                   <div className="flex flex-col sm:flex-row sm:items-center mt-3 text-neutral-500 gap-3 sm:gap-6">
+                    {assignment.lecturerName && (
+                      <span className="flex items-center text-sm sm:text-base font-bold text-indigo-600">
+                        <User className="w-5 h-5 mr-2" />
+                        {assignment.lecturerTitle ? `${assignment.lecturerTitle} ` : ''}{assignment.lecturerName}
+                      </span>
+                    )}
                     <span className="flex items-center text-sm sm:text-base">
                       <Calendar className="w-5 h-5 mr-2 text-indigo-600" />
                       Deadline: {format(new Date(assignment.deadline), 'PPP p')}
@@ -171,6 +177,20 @@ export default function AssignmentDetail({ user }: AssignmentDetailProps) {
                       )}>{submission?.status || 'Not Started'}</span>
                     </span>
                   </div>
+                  {(assignment.courseCode || assignment.courseTitle) && (
+                    <div className="flex items-center gap-2 mt-2">
+                      {assignment.courseCode && (
+                        <span className="px-2 py-0.5 bg-neutral-100 rounded text-xs font-bold text-neutral-600 uppercase tracking-wider">
+                          {assignment.courseCode}
+                        </span>
+                      )}
+                      {assignment.courseTitle && (
+                        <span className="text-xs text-neutral-400 font-medium italic">
+                          {assignment.courseTitle}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -305,6 +325,23 @@ export default function AssignmentDetail({ user }: AssignmentDetailProps) {
                     <div>
                       <p className="text-sm font-medium text-neutral-900">{step.task}</p>
                       <p className="text-[10px] text-neutral-400 mt-0.5">{step.time}</p>
+                      {step.resources && step.resources.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">Resources:</p>
+                          {step.resources.map((resource, rIndex) => (
+                            <p key={rIndex} className="text-[10px] text-neutral-500 flex items-center gap-1">
+                              <ArrowLeft className="w-2 h-2 rotate-180" />
+                              {resource.startsWith('http') ? (
+                                <a href={resource} target="_blank" rel="noopener noreferrer" className="hover:text-indigo-600 underline">
+                                  {resource}
+                                </a>
+                              ) : (
+                                <span>{resource}</span>
+                              )}
+                            </p>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}

@@ -18,6 +18,7 @@ import LecturerSubmissions from './pages/LecturerSubmissions';
 import LecturerAttendance from './pages/LecturerAttendance';
 import Assignments from './pages/Assignments';
 import AdminDashboard from './pages/AdminDashboard';
+import CourseManagement from './pages/CourseManagement';
 import Layout from './components/Layout';
 
 export default function App() {
@@ -25,7 +26,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') === 'dark';
+      const stored = localStorage.getItem('theme');
+      if (stored) return stored === 'dark';
+      // Default to system preference if no stored theme
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     return false;
   });
@@ -81,6 +85,17 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('theme')) {
+        setIsDarkMode(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
     const themeColor = isDarkMode ? '#0a0a0a' : '#f9fafb';
     let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
@@ -92,10 +107,8 @@ export default function App() {
 
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
     }
   }, [isDarkMode]);
 
@@ -120,6 +133,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard user={user} />} />
           <Route path="/assignments" element={<Assignments user={user} />} />
           <Route path="/assignment/:id" element={<AssignmentDetail user={user} />} />
+          <Route path="/courses" element={(user?.role === 'lecturer' || user?.role === 'admin') ? <CourseManagement user={user} /> : <Navigate to="/dashboard" />} />
           <Route path="/notes" element={<NotesSimplifierPage />} />
           <Route path="/mock-exams" element={<MockExamGenerator />} />
           <Route path="/attendance" element={user?.role === 'student' ? <AttendanceScanner user={user} /> : <Navigate to="/dashboard" />} />

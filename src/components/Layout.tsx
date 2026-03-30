@@ -38,6 +38,7 @@ export default function Layout({ user, isDarkMode }: LayoutProps) {
 
   const lecturerNavItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Course Management', path: '/courses', icon: BookOpen },
     { name: 'Assignments', path: '/assignments', icon: FileText },
     { name: 'Submissions', path: '/submissions', icon: FileText },
     { name: 'Attendance Tracking', path: '/lecturer-attendance', icon: Users },
@@ -47,7 +48,7 @@ export default function Layout({ user, isDarkMode }: LayoutProps) {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Admin Panel', path: '/admin', icon: Shield },
     { name: 'Assignments', path: '/assignments', icon: FileText },
-    { name: 'Courses', path: '/dashboard', icon: BookOpen },
+    { name: 'Courses', path: '/courses', icon: BookOpen },
   ];
   
   const navItems = user?.role === 'admin' ? adminNavItems : (user?.role === 'lecturer' ? lecturerNavItems : studentNavItems);

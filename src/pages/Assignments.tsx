@@ -19,9 +19,14 @@ export default function Assignments({ user }: AssignmentsProps) {
   if (!user) return null;
 
   useEffect(() => {
-    const q = user.role === 'student' 
-      ? query(collection(db, 'assignments'), orderBy('deadline', 'asc'))
-      : query(collection(db, 'assignments'), orderBy('createdAt', 'desc'));
+    let q;
+    if (user.role === 'student') {
+      q = query(collection(db, 'assignments'), orderBy('deadline', 'asc'));
+    } else if (user.role === 'lecturer') {
+      q = query(collection(db, 'assignments'), where('lecturerId', '==', user.uid), orderBy('createdAt', 'desc'));
+    } else {
+      q = query(collection(db, 'assignments'), orderBy('createdAt', 'desc'));
+    }
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setAssignments(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Assignment)));
@@ -111,7 +116,20 @@ export default function Assignments({ user }: AssignmentsProps) {
                       <h3 className="font-bold text-neutral-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                         {assignment.title}
                       </h3>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+                        {assignment.lecturerName && (
+                          <span className="text-indigo-600 dark:text-indigo-400 font-bold">
+                            {assignment.lecturerTitle ? `${assignment.lecturerTitle} ` : ''}{assignment.lecturerName}
+                          </span>
+                        )}
+                        {assignment.courseCode && (
+                          <span className="bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
+                            {assignment.courseCode}
+                          </span>
+                        )}
+                        {assignment.courseTitle && (
+                          <span>{assignment.courseTitle}</span>
+                        )}
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           Due {safeFormat(assignment.deadline, 'MMM d, h:mm a')}
@@ -129,6 +147,9 @@ export default function Assignments({ user }: AssignmentsProps) {
                           </span>
                         )}
                       </div>
+                      <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-2 line-clamp-1">
+                        {assignment.description}
+                      </p>
                     </div>
                   </div>
                   <div className="mt-4 md:mt-0 flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400">

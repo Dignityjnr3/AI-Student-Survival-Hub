@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { collection, query, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '../firebase';
+import { db, auth, handleFirestoreError, OperationType } from '../firebase';
 import { UserProfile, Course, Assignment } from '../types';
-import { Users, BookOpen, FileText, Shield, Trash2, UserCog, Search, Activity, Clock } from 'lucide-react';
+import { Users, BookOpen, FileText, Shield, Trash2, UserCog, Search, Activity, Clock, Lock } from 'lucide-react';
 import { safeLocaleDate, toDate } from '../lib/dateUtils';
 
 export default function AdminDashboard() {
@@ -12,7 +12,14 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const isAdmin = auth.currentUser?.email === 'austineemeka2003cares@gmail.com';
+
   useEffect(() => {
+    if (!isAdmin) {
+      setLoading(false);
+      return;
+    }
+
     const unsubUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
       setUsers(snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() } as UserProfile)));
     }, (error) => {
@@ -67,6 +74,22 @@ export default function AdminDashboard() {
   const recentUsers = [...users].sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0)).slice(0, 5);
   const recentCourses = [...courses].sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0)).slice(0, 5);
   const recentAssignments = [...assignments].sort((a, b) => (toDate(b.createdAt)?.getTime() || 0) - (toDate(a.createdAt)?.getTime() || 0)).slice(0, 5);
+
+  if (!isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center p-24 dark:text-white space-y-6">
+        <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-3xl flex items-center justify-center text-red-600 dark:text-red-400">
+          <Lock className="w-10 h-10" />
+        </div>
+        <div className="text-center">
+          <h2 className="text-2xl font-black tracking-tight">Access Denied</h2>
+          <p className="text-neutral-500 dark:text-neutral-400 mt-2">
+            This area is restricted to the platform administrator.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
