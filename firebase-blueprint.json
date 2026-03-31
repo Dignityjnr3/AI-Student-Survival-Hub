@@ -48,6 +48,7 @@
         "id": { "type": "string" },
         "assignmentId": { "type": "string" },
         "studentId": { "type": "string" },
+        "lecturerId": { "type": "string" },
         "studentName": { "type": "string" },
         "type": { "type": "string", "enum": ["text", "file"] },
         "content": { "type": "string" },
@@ -60,7 +61,7 @@
         "completedAt": { "type": "string", "format": "date-time" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["id", "assignmentId", "studentId", "status", "type"]
+      "required": ["id", "assignmentId", "studentId", "lecturerId", "status", "type"]
     },
     "Attendance": {
       "title": "Attendance",

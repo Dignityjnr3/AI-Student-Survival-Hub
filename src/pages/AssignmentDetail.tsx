@@ -71,6 +71,7 @@ export default function AssignmentDetail({ user }: AssignmentDetailProps) {
           id: submissionId,
           assignmentId: id,
           studentId: user.uid,
+          lecturerId: assignment.lecturerId,
           studentName: user.name,
           status: 'pending',
           type: 'text', // Default type
@@ -106,6 +107,7 @@ export default function AssignmentDetail({ user }: AssignmentDetailProps) {
         id: submissionId,
         assignmentId: id,
         studentId: user.uid,
+        lecturerId: assignment.lecturerId,
         studentName: user.name,
         type: submissionType,
         content: submissionType === 'text' ? pastedContent : '',

@@ -39,6 +39,7 @@ export interface Submission {
   id: string;
   assignmentId: string;
   studentId: string;
+  lecturerId: string; // Added to filter submissions for lecturers
   studentName?: string;
   type: 'text' | 'file';
   content?: string; // Pasted text

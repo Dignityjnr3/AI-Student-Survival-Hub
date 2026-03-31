@@ -54,6 +54,7 @@ service cloud.firestore {
     function isValidSubmission(data) {
       return data.assignmentId is string &&
              data.studentId is string && data.studentId == request.auth.uid &&
+             data.lecturerId is string &&
              data.status in ['pending', 'submitted', 'graded'] &&
              data.type in ['text', 'file'];
     }
@@ -92,9 +93,9 @@ service cloud.firestore {
 
     // Submissions
     match /submissions/{submissionId} {
-      allow read: if isAuthenticated() && (resource.data.studentId == request.auth.uid || isRole('lecturer') || isAdmin());
+      allow read: if isAuthenticated() && (resource.data.studentId == request.auth.uid || (isRole('lecturer') && resource.data.lecturerId == request.auth.uid) || isAdmin());
       allow create: if isRole('student') && isValidSubmission(request.resource.data);
-      allow update: if (isAuthenticated() && (resource.data.studentId == request.auth.uid || isRole('lecturer') || isAdmin()));
+      allow update: if isAuthenticated() && (resource.data.studentId == request.auth.uid || (isRole('lecturer') && resource.data.lecturerId == request.auth.uid) || isAdmin());
     }
 
     // Attendance

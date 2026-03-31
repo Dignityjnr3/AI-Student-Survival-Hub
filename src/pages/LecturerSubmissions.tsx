@@ -21,7 +21,7 @@ export default function LecturerSubmissions({ user }: LecturerSubmissionsProps) 
 
   useEffect(() => {
     // 1. Get all assignments created by this lecturer
-    const assignmentsQ = query(collection(db, 'assignments')); // In a real app, you'd filter by course -> lecturer
+    const assignmentsQ = query(collection(db, 'assignments'), where('lecturerId', '==', user.uid));
     
     const unsubscribeAssignments = onSnapshot(assignmentsQ, (snapshot) => {
       const assignmentsMap: Record<string, Assignment> = {};
@@ -31,8 +31,12 @@ export default function LecturerSubmissions({ user }: LecturerSubmissionsProps) 
       setAssignments(assignmentsMap);
     });
 
-    // 2. Get all submissions
-    const submissionsQ = query(collection(db, 'submissions'), where('status', 'in', ['submitted', 'graded']));
+    // 2. Get all submissions for this lecturer's assignments
+    const submissionsQ = query(
+      collection(db, 'submissions'), 
+      where('lecturerId', '==', user.uid),
+      where('status', 'in', ['submitted', 'graded'])
+    );
     const unsubscribeSubmissions = onSnapshot(submissionsQ, (snapshot) => {
       setSubmissions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Submission)));
       setLoading(false);
