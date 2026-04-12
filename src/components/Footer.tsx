@@ -19,14 +19,14 @@ export default function Footer() {
   };
 
   const teamMembers = [
-    { name: "Onogu Isaac Ojonugwa", phone: "+2349056423754", role: "Lead Developer" },
+    { name: "Odo Augustine Chukwuemeka", phone: "+2349069977191", role: "Lead Developer" },
     { name: "Nnadi Gideon Chizaram", phone: "+2348120172104", role: "Technical Lead" },
     { name: "Wisdom Chinazom Elochukwu", phone: "+2348169218855", role: "Project Coordinator" }
   ];
 
   const supportMembers = [
     { name: "OMEKE CHINONSO HENRY", phone: "+2348053630051", role: "Support Specialist" },
-    { name: "Odo Augustine Chukwuemeka", phone: "+2349069977191", role: "Community Manager" }
+    { name: "Onogu Isaac Ojonugwa", phone: "+2349056423754", role: "Community Manager" }
   ];
 
   return (

@@ -3,7 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 export async function generateStudyPlan(assignmentTitle: string, description: string, deadline: string) {
-  const model = "gemini-3-flash-preview";
+  const model = "gemini-1.5-flash";
   
   const prompt = `As an academic assistant, create a detailed study plan for the following assignment:
   Title: ${assignmentTitle}
@@ -47,7 +47,7 @@ export async function generateStudyPlan(assignmentTitle: string, description: st
 }
 
 export async function simplifyNotes(notes: string) {
-  const model = "gemini-3-flash-preview";
+  const model = "gemini-1.5-flash";
   
   const prompt = `Simplify the following academic notes. Provide a concise summary and a simplified explanation for a student:
   
@@ -73,7 +73,7 @@ export async function simplifyNotes(notes: string) {
 }
 
 export async function generateMockExam(content: string) {
-  const model = "gemini-3-flash-preview";
+  const model = "gemini-1.5-flash";
   
   const prompt = `Based on the following course content, generate a mock exam with 5 multiple choice questions and 5 short answer questions. 
   Ensure the questions are challenging and cover the key concepts.

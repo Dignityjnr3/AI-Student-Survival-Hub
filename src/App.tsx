@@ -35,7 +35,9 @@ export default function App() {
   });
 
   useEffect(() => {
+    console.log("App: Initializing auth listener...");
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      console.log("App: Auth state changed, user:", firebaseUser?.uid);
       if (firebaseUser) {
         try {
           const userDocRef = doc(db, 'users', firebaseUser.uid);
@@ -43,17 +45,17 @@ export default function App() {
           
           if (userDoc.exists()) {
             const userData = userDoc.data() as UserProfile;
+            console.log("App: User profile found, role:", userData.role);
             // Automatically upgrade default admin email to admin role
             if (firebaseUser.email?.toLowerCase() === 'austineemeka2003cares@gmail.com' && userData.role !== 'admin') {
               try {
                 await updateDoc(userDocRef, { role: 'admin' });
                 userData.role = 'admin';
-                console.log("User auto-upgraded to admin role");
+                console.log("App: User auto-upgraded to admin role");
               } catch (err) {
-                console.error("Failed to auto-upgrade admin role:", err);
+                console.error("App: Failed to auto-upgrade admin role:", err);
               }
             }
-            console.log("Current user role:", userData.role);
             setUser(userData);
           } else if (firebaseUser.email?.toLowerCase() === 'austineemeka2003cares@gmail.com') {
             // Create profile for bootstrap admin if it doesn't exist
@@ -65,20 +67,23 @@ export default function App() {
               createdAt: new Date().toISOString()
             };
             await setDoc(userDocRef, newAdmin);
-            console.log("Created new admin profile for bootstrap email");
+            console.log("App: Created new admin profile for bootstrap email");
             setUser(newAdmin);
           } else {
             // User exists in Auth but not in Firestore (and not bootstrap admin)
+            console.warn("App: User exists in Auth but no Firestore profile found.");
             setUser(null);
           }
         } catch (error) {
-          console.error("Error fetching user profile:", error);
+          console.error("App: Error fetching user profile:", error);
           setUser(null);
         }
       } else {
+        console.log("App: No user logged in.");
         setUser(null);
       }
       setLoading(false);
+      console.log("App: Loading finished.");
     });
 
     return () => unsubscribe();
